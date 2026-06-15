@@ -1,29 +1,32 @@
-<nav class="bg-white shadow mb-6">
-    <div class="container mx-auto px-6 py-4 flex justify-between">
+<nav class="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-white/10">
+    <div class="flex items-center justify-between px-8 py-4">
+        <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
+            Hans Padel
+        </a>
 
-        <h1 class="text-xl font-bold">
-            Padel Booking
-        </h1>
-
-        <div class="space-x-4">
-            <a href="/" class="text-gray-700 hover:text-blue-500">
+        <div class="flex items-center gap-6">
+            <a href="/" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300">
                 Home
             </a>
-            <a href="/showcase-report" class="text-gray-700 hover:text-blue-500">
+
+            <a href="/showcase-report" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300">
                 Showcase Report
             </a>
-            <a href="/diagram" class="text-gray-700 hover:text-blue-500">
-                Diagram
-            </a>
 
-            <a href="/courts" class="text-gray-700 hover:text-blue-500">
+            <a href="/courts" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300">
                 Courts
             </a>
 
-            <a href="/booking" class="text-gray-700 hover:text-blue-500">
+            <a href="/booking" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300">
                 Booking
             </a>
-        </div>
 
+            <button
+                id="theme-toggle"
+                class="px-4 py-2 rounded-lg border border-gray-300 dark:border-white/30 text-gray-900 dark:text-white bg-white dark:bg-gray-800"
+            >
+                🌙
+            </button>
+        </div>
     </div>
 </nav>

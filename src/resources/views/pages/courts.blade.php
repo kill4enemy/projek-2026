@@ -2,32 +2,79 @@
 
 @section('content')
 
-<h2 class="text-2xl font-bold mb-6">
+<h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
     Daftar Lapangan
 </h2>
 
-<div class="grid grid-cols-3 gap-6">
+<form method="GET" action="/courts" class="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+    <label class="block mb-2 text-gray-900 dark:text-white">
+        Cek Ketersediaan Berdasarkan Tanggal
+    </label>
 
-@foreach($courts as $court)
+    <div class="flex gap-3">
+        <input
+            type="date"
+            name="date"
+            value="{{ $selectedDate }}"
+            class="border p-3 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+        >
 
-<div class="bg-white p-6 rounded shadow">
+        <button class="bg-blue-600 text-white px-5 py-2 rounded">
+            Cek
+        </button>
+    </div>
+</form>
 
-    <h3 class="text-xl font-bold">
-        {{ $court->name }}
-    </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    @foreach($courts as $court)
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
 
-    <p>
-        {{ $court->location }}
-    </p>
+            @if($court->image)
+                <img
+                    src="{{ str_starts_with($court->image, 'images/')
+                        ? asset($court->image)
+                        : asset('storage/' . $court->image) }}"
+                    class="w-full h-48 object-cover"
+                >
+            @else
+                <div class="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-300">
+                    Belum ada gambar
+                </div>
+            @endif
 
-    <p>
-        Rp {{ number_format($court->price_per_hour) }}
-    </p>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                    {{ $court->name }}
+                </h3>
 
-</div>
+                <p class="text-gray-600 dark:text-gray-300">
+                    {{ $court->location }}
+                </p>
 
-@endforeach
+                <p class="text-gray-700 dark:text-gray-200 mb-4">
+                    Rp {{ number_format($court->price_per_hour) }} / jam
+                </p>
 
+                @if($court->bookings->count() > 0)
+                    <span class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm">
+                        Ada Booking
+                    </span>
+
+                    <div class="mt-3">
+                        @foreach($court->bookings as $booking)
+                            <p class="text-sm text-gray-500 dark:text-gray-300">
+                                {{ $booking->start_time }} - {{ $booking->end_time }}
+                            </p>
+                        @endforeach
+                    </div>
+                @else
+                    <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm">
+                        Tersedia
+                    </span>
+                @endif
+            </div>
+        </div>
+    @endforeach
 </div>
 
 @endsection

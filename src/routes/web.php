@@ -2,6 +2,7 @@
 use App\Models\Booking;
 use App\Models\Court;
 use App\Models\ProjectReport;
+use App\Http\Controllers\BookingController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,12 +25,12 @@ Livewire::setScriptRoute(function ($handle) {
 / END
 */
 Route::get('/', function () {
-    return view('pages.home');
+    $totalBookings = Booking::count();
+    $totalCourts = Court::count();
+    $courts = Court::whereNotNull('image')->get();
+    return view('pages.home', compact('totalBookings', 'totalCourts','courts'));
 });
 
-Route::get('/courts', function () {
-    return view('pages.courts');
-});
 
 Route::get('/booking', function () {
     $courts = \App\Models\Court::where('is_active', true)->get();
@@ -37,33 +38,35 @@ Route::get('/booking', function () {
     return view('pages.booking', compact('courts'));
 });
 
-Route::post('/booking', function (Request $request) {
+Route::post('/booking', [BookingController::class, 'store'])
+    ->name('booking.store');
 
-    Booking::create([
-        'user_id' => 1, // sementara hardcode dulu
+Route::get('/payment/{booking}', function (Booking $booking) {
+    return view('pages.payment', compact('booking'));
+})->name('payment.show');
 
-        'court_id' => $request->court_id,
+Route::post('/payment/{booking}', function (Booking $booking) {
 
-        'booking_date' => $request->booking_date,
-
-        'start_time' => $request->start_time,
-
-        'end_time' => $request->end_time,
-
-        'total_price' => 150000,
-
-        'status' => 'pending',
+    $booking->update([
+        'status' => 'waiting_confirmation',
     ]);
 
     return redirect('/booking')
-        ->with('success', 'Booking berhasil dibuat');
-});
+        ->with('success', 'Pembayaran berhasil dikirim. Menunggu konfirmasi admin.');
 
-Route::get('/courts', function () {
+})->name('payment.confirm');
 
-    $courts = \App\Models\Court::all();
+Route::get('/courts', function (Request $request) {
+    $selectedDate = $request->get('date', now()->toDateString());
 
-    return view('pages.courts', compact('courts'));
+    
+    $courts = Court::with(['bookings' => function ($query) use ($selectedDate) {
+        $query->where('booking_date', $selectedDate)
+            ->where('status', 'confirmed')
+            ->orderBy('start_time');
+    }])->get();
+
+    return view('pages.courts', compact('courts', 'selectedDate'));
 });
 
 Route::get('/diagram', function () {

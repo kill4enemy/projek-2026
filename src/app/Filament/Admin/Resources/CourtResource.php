@@ -8,6 +8,7 @@ use App\Models\Court;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\FileUpload;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,7 +36,12 @@ class CourtResource extends Resource
 
                 Forms\Components\Toggle::make('is_active')
                     ->default(true),
-
+                FileUpload::make('image')
+                ->label('Gambar Lapangan')
+                ->image()
+                ->directory('courts')
+                ->disk('public')
+                ->nullable(),
             ]);
     }
 
@@ -61,7 +67,7 @@ class CourtResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

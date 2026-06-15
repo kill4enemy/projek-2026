@@ -23,6 +23,17 @@ class BookingResource extends Resource
     {
         return $form
             ->schema([
+            Forms\Components\TextInput::make('customer_name')
+                ->label('Nama Pemesan')
+                ->required(),
+
+            Forms\Components\TextInput::make('customer_phone')
+                ->label('Nomor HP')
+                ->required(),
+
+            Forms\Components\TextInput::make('customer_email')
+                ->label('Email')
+                ->email(),
             Forms\Components\Select::make('user_id')
                 ->relationship('user', 'name')
                 ->searchable()
@@ -52,13 +63,14 @@ class BookingResource extends Resource
 
             Forms\Components\Select::make('status')
                 ->options([
-                    'pending' => 'Pending',
-                    'confirmed' => 'Confirmed',
-                    'cancelled' => 'Cancelled',
-                    'completed' => 'Completed',
+                    'pending_payment' => 'Menunggu Pembayaran',
+                    'waiting_confirmation' => 'Menunggu Konfirmasi',
+                    'confirmed' => 'Dikonfirmasi',
+                    'cancelled' => 'Dibatalkan',
                 ])
-                ->default('pending')
-                ->required(),
+                ->default('pending_payment')
+                ->required()
+                ->hiddenOn('create'),
         ]);
     }
 
@@ -66,6 +78,12 @@ class BookingResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('customer_name')
+                ->label('Pemesan')
+                ->searchable(),
+
+            Tables\Columns\TextColumn::make('customer_phone')
+                ->label('No HP'),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Customer')
                     ->searchable(),

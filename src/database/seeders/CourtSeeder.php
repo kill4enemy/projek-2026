@@ -17,6 +17,7 @@ class CourtSeeder extends Seeder
             'location' => 'Tangerang',
             'price_per_hour' => 150000,
             'is_active' => true,
+            'image' => 'images/Lapangan.jpg',
         ]);
 
         Court::create([
@@ -24,6 +25,7 @@ class CourtSeeder extends Seeder
             'location' => 'Tangerang',
             'price_per_hour' => 150000,
             'is_active' => true,
+            'image' => 'images/Lapangan.jpg',
         ]);
 
         Court::create([
@@ -31,6 +33,7 @@ class CourtSeeder extends Seeder
             'location' => 'Tangerang',
             'price_per_hour' => 450000,
             'is_active' => true,
+            'image' => 'images/Lapangan.jpg',
         ]);
     }
 }

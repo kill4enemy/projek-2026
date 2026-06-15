@@ -2,17 +2,230 @@
 
 @section('content')
 
-<div class="bg-white p-10 rounded shadow">
+<div class="-mx-4 sm:-mx-6 lg:-mx-10 -mt-6">
+    <section
+        class="relative overflow-hidden min-h-[750px]
+        bg-gradient-to-br
+        from-slate-100 via-blue-100 to-cyan-100
+        dark:from-slate-950 dark:via-blue-950 dark:to-slate-900"
+    >
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.25),transparent_35%)]"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(6,182,212,0.20),transparent_35%)]"></div>
 
-    <h2 class="text-3xl font-bold mb-4">
-        Sistem Penyewaan Lapangan Padel
-    </h2>
+        <div class="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 dark:bg-blue-500/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-72 h-72 bg-cyan-500/10 dark:bg-cyan-500/20 rounded-full blur-3xl"></div>
 
-    <p class="text-gray-600">
-        Selamat datang di sistem booking lapangan padel. 
-        Anda dapat melihat jadwal lapangan dan melakukan pemesanan secara online.
-    </p>
+        <div class="absolute inset-0 dark:bg-black/40"></div>
+
+<div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 min-h-[750px] items-center px-8 md:px-28 pt-10">
+
+    {{-- Left Card --}}
+    <div class="max-w-2xl rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border border-white/30 dark:border-white/20 p-8 md:p-10 shadow-2xl">
+        <p class="text-blue-600 dark:text-blue-300 font-semibold tracking-widest uppercase mb-4">
+            Hans Padel
+        </p>
+
+        <h1 class="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+            Booking Lapangan Padel Jadi Lebih Mudah
+        </h1>
+
+        <p class="text-gray-700 dark:text-gray-200 text-lg mb-8 leading-relaxed">
+            Sistem Informasi Penyewaan Lapangan Padel Berbasis Web membantu pengguna
+            melihat lapangan, memilih jadwal, dan melakukan pemesanan secara online.
+        </p>
+
+        <div class="grid grid-cols-3 gap-4 mb-8">
+            <div>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    {{ $totalBookings }}+
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300">Booking</p>
+            </div>
+
+            <div>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    {{ $totalCourts }}
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300">Lapangan</p>
+            </div>
+
+            <div>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    24/7
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300">Akses Online</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-4">
+            <a
+                href="/booking"
+                class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+            >
+                Booking Sekarang
+            </a>
+
+            <a
+                href="/courts"
+                class="bg-gray-900/10 dark:bg-white/20 text-gray-900 dark:text-white px-6 py-3 rounded-lg border border-gray-900/10 dark:border-white/30 hover:bg-gray-900/20 dark:hover:bg-white/30 transition"
+            >
+                Lihat Lapangan
+            </a>
+        </div>
+    </div>
+
+    {{-- Right Slideshow --}}
+    <div class="relative h-[420px] rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
+        @forelse ($courts as $index => $court)
+            <div class="court-slide absolute inset-0 transition-opacity duration-700 {{ $index === 0 ? 'opacity-100' : 'opacity-0' }}">
+                <img
+                    src="{{ str_starts_with($court->image, 'images/')
+                        ? asset($court->image)
+                        : asset('storage/' . $court->image) }}"
+                    alt="{{ $court->name }}"
+                    class="w-full h-full object-cover"
+                >
+
+                <div class="absolute bottom-0 left-0 right-0 bg-black/60 p-5 text-white">
+                    <h3 class="text-xl font-bold">
+                        {{ $court->name }}
+                    </h3>
+
+                    <p class="text-sm text-gray-200">
+                        Rp {{ number_format($court->price_per_hour) }} / jam
+                    </p>
+                </div>
+            </div>
+        @empty
+            <div class="w-full h-full flex items-center justify-center bg-white/10 text-white">
+                Belum ada gambar lapangan
+            </div>
+        @endforelse
+
+        @if ($courts->count() > 1)
+            <button
+                type="button"
+                id="prev-slide"
+                class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white w-10 h-10 rounded-full hover:bg-black/70"
+            >
+                ‹
+            </button>
+
+            <button
+                type="button"
+                id="next-slide"
+                class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white w-10 h-10 rounded-full hover:bg-black/70"
+            >
+                ›
+            </button>
+
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                @foreach ($courts as $index => $court)
+                    <button
+                        type="button"
+                        class="slide-dot w-3 h-3 rounded-full {{ $index === 0 ? 'bg-white' : 'bg-white/40' }}"
+                        data-slide="{{ $index }}"
+                    ></button>
+                @endforeach
+            </div>
+        @endif
+    </div>
 
 </div>
 
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+        <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+            Cek Lapangan
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300">
+            Pengguna dapat melihat daftar lapangan padel yang tersedia.
+        </p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+        <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+            Booking Online
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300">
+            Pemesanan dilakukan melalui website dengan memilih tanggal dan jam.
+        </p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+        <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+            Admin Panel
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300">
+            Admin dapat mengelola lapangan, booking, dan laporan project.
+        </p>
+    </div>
+</section>
+
+
+<script>
+    const slides = document.querySelectorAll('.court-slide');
+    const dots = document.querySelectorAll('.slide-dot');
+    const nextButton = document.getElementById('next-slide');
+    const prevButton = document.getElementById('prev-slide');
+
+    let currentSlide = 0;
+    let slideInterval;
+
+    function showSlide(index) {
+        if (!slides.length) return;
+
+        slides[currentSlide].classList.remove('opacity-100');
+        slides[currentSlide].classList.add('opacity-0');
+
+        dots[currentSlide]?.classList.remove('bg-white');
+        dots[currentSlide]?.classList.add('bg-white/40');
+
+        currentSlide = (index + slides.length) % slides.length;
+
+        slides[currentSlide].classList.remove('opacity-0');
+        slides[currentSlide].classList.add('opacity-100');
+
+        dots[currentSlide]?.classList.remove('bg-white/40');
+        dots[currentSlide]?.classList.add('bg-white');
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+        showSlide(currentSlide - 1);
+    }
+
+    function startSlideShow() {
+        slideInterval = setInterval(nextSlide, 3000);
+    }
+
+    function resetSlideShow() {
+        clearInterval(slideInterval);
+        startSlideShow();
+    }
+
+    nextButton?.addEventListener('click', () => {
+        nextSlide();
+        resetSlideShow();
+    });
+
+    prevButton?.addEventListener('click', () => {
+        prevSlide();
+        resetSlideShow();
+    });
+
+    dots.forEach((dot) => {
+        dot.addEventListener('click', () => {
+            showSlide(Number(dot.dataset.slide));
+            resetSlideShow();
+        });
+    });
+
+    if (slides.length > 1) {
+        startSlideShow();
+    }
+</script>
 @endsection

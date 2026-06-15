@@ -11,6 +11,7 @@ class Court extends Model
     'location',
     'price_per_hour',
     'is_active',
+    'image',
 ];
     public function bookings()
     {

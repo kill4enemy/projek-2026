@@ -2,13 +2,20 @@
 
 @section('content')
 
-<h2 class="text-2xl font-bold mb-6">
+<h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
     Booking Lapangan
 </h2>
 
-<div class="bg-white p-6 rounded shadow">
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
 
-<form method="POST" action="/booking">
+<form action="{{ route('booking.store') }}" method="POST">
+    @csrf
+
+@if (session('error'))
+    <div class="mb-4 p-4 rounded bg-red-100 text-red-700">
+        {{ session('error') }}
+    </div>
+@endif
 
 @if(session('success'))
     <div class="mb-4 bg-green-100 text-green-700 p-3 rounded">
@@ -26,16 +33,49 @@
     </div>
 @endif
 
-@csrf
+<div class="mb-4">
+    <label class="block mb-2 text-gray-900 dark:text-white">Nama Pemesan</label>
+    <input
+        type="text"
+        name="customer_name"
+        value="{{ old('customer_name') }}"
+        class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded bg-white text-gray-900 dark:bg-gray-700 dark:text-white"
+        required
+    >
+</div>
 
 <div class="mb-4">
-<label class="block mb-2">Pilih Lapangan</label>
+    <label class="block mb-2 text-gray-900 dark:text-white">Nomor HP</label>
+    <input
+        type="text"
+        name="customer_phone"
+        value="{{ old('customer_phone') }}"
+        class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded bg-white text-gray-900 dark:bg-gray-700 dark:text-white"
+        required
+    >
+</div>
 
-<select name="court_id" class="w-full border p-2 rounded">
+<div class="mb-4">
+    <label class="block mb-2 text-gray-900 dark:text-white">Email</label>
+    <input
+        type="email"
+        name="customer_email"
+        value="{{ old('customer_email') }}"
+        class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded bg-white text-gray-900 dark:bg-gray-700 dark:text-white"
+    >
+</div>
+
+<div class="mb-4">
+<label class="block mb-2 text-gray-900 dark:text-white">Pilih Lapangan</label>
+
+<select name="court_id" class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded bg-white text-gray-900 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
 
 @foreach($courts as $court)
 
-<option value="{{ $court->id }}">
+<option
+    value="{{ $court->id }}"
+    @selected(old('court_id') == $court->id)
+>
 {{ $court->name }}
 </option>
 
@@ -46,22 +86,46 @@
 
 
 <div class="mb-4">
-<label class="block mb-2">Tanggal</label>
+<label class="block mb-2 text-gray-900 dark:text-white">Tanggal</label>
 
-<input type="date" name="booking_date" class="w-full border p-2 rounded" required>
+<input
+    type="date"
+    name="booking_date"
+    value="{{ old('booking_date') }}"
+    class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded bg-white text-gray-900 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+    required
+>
 </div>
 
 
 <div class="mb-4">
-<label class="block mb-2">Jam</label>
+    <label class="block mb-2 text-gray-900 dark:text-white">
+        Jam Reservasi
+    </label>
 
-<input type="time" name="start_time" class="w-full border p-2 rounded" required>
+    <input
+        type="time"
+        name="start_time"
+        value="{{ old('start_time') }}"
+        class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded bg-white text-gray-900 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+    >
 </div>
 
 <div class="mb-4">
-<label class="block mb-2">Jam Selesai</label>
+    <label class="block mb-2 text-gray-900 dark:text-white">
+        Durasi Permainan
+    </label>
 
-<input type="time" name="end_time" class="w-full border p-2 rounded" required>
+    <select
+        name="duration"
+        class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded bg-white text-gray-900 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+    >
+        <option value="1" @selected(old('duration') == 1)>1 Jam</option>
+        <option value="2" @selected(old('duration') == 2)>2 Jam</option>
+        <option value="3" @selected(old('duration') == 3)>3 Jam</option>
+    </select>
 </div>
 
 
