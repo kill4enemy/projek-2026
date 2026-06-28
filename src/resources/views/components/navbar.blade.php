@@ -9,8 +9,8 @@
                 Home
             </a>
 
-            <a href="/showcase-report" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300">
-                Showcase Report
+            <a href="/#about" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300">
+                About
             </a>
 
             <a href="/courts" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300">

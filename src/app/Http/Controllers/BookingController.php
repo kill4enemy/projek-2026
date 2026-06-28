@@ -6,6 +6,9 @@ use App\Models\Court;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+use Midtrans\Config;
+use Midtrans\Snap;
+
 class BookingController extends Controller
 {
     public function store(Request $request)
@@ -71,7 +74,93 @@ class BookingController extends Controller
                     'status' => 'pending_payment',
                 ]);
 
+                $booking->update([
+                    'booking_code' => 'HANS-' . now()->format('Ymd') . '-' . $booking->id,
+                    'midtrans_order_id' => 'HANS-' . now()->format('YmdHis') . '-' . $booking->id,
+                ]);
+
+                Config::$serverKey = config('services.midtrans.server_key');
+                Config::$isProduction = config('services.midtrans.is_production');
+                Config::$isSanitized = config('services.midtrans.is_sanitized');
+                Config::$is3ds = config('services.midtrans.is_3ds');
+
+                $params = [
+                    'transaction_details' => [
+                        'order_id' => $booking->midtrans_order_id,
+                        'gross_amount' => $booking->total_price,
+                    ],
+                    'customer_details' => [
+                        'first_name' => $booking->customer_name,
+                        'email' => $booking->customer_email,
+                        'phone' => $booking->customer_phone,
+                    ],
+                    'callbacks' => [
+                        'finish' => route('payment.finish', $booking),
+                    ],
+                ];
+
+                $snapToken = Snap::getSnapToken($params);
+
+                $booking->update([
+                    'snap_token' => $snapToken,
+                ]);
+
                 return redirect()->route('payment.show', $booking);
+    }
+    public function callback(Request $request)
+    {
+            $serverKey = config('services.midtrans.server_key');
+
+            $signatureKey = hash(
+                'sha512',
+                $request->order_id .
+                $request->status_code .
+                $request->gross_amount .
+                $serverKey
+            );
+
+            if ($signatureKey !== $request->signature_key) {
+                return response()->json([
+                    'message' => 'Invalid signature',
+                ], 403);
+            }
+
+            $booking = Booking::where('midtrans_order_id', $request->order_id)->first();
+
+            if (!$booking) {
+                return response()->json([
+                    'message' => 'Booking not found',
+                ], 404);
+            }
+
+            if (in_array($request->transaction_status, ['capture', 'settlement'])) {
+                $booking->update([
+                    'status' => 'confirmed',
+                    'payment_type' => $request->payment_type,
+                    'transaction_status' => $request->transaction_status,
+                    'paid_at' => now(),
+                ]);
+            }
+
+            if ($request->transaction_status === 'pending') {
+                $booking->update([
+                    'status' => 'pending_payment',
+                    'payment_type' => $request->payment_type,
+                    'transaction_status' => $request->transaction_status,
+                ]);
+            }
+
+            if (in_array($request->transaction_status, ['deny', 'expire', 'cancel'])) {
+                $booking->update([
+                    'status' => 'cancelled',
+                    'payment_type' => $request->payment_type,
+                    'transaction_status' => $request->transaction_status,
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'Callback processed',
+            ]);
     }
 
 }

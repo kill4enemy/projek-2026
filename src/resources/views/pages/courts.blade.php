@@ -47,14 +47,31 @@
                     {{ $court->name }}
                 </h3>
 
-                <p class="text-gray-600 dark:text-gray-300">
-                    {{ $court->location }}
-                </p>
+            <p class="text-gray-600 dark:text-gray-300">
+                {{ $court->location }}
+            </p>
 
-                <p class="text-gray-700 dark:text-gray-200 mb-4">
-                    Rp {{ number_format($court->price_per_hour) }} / jam
-                </p>
+            @if($court->description)
+                <div class="mt-3 mb-4">
+                    <p class="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                        Fasilitas:
+                    </p>
 
+                    <div class="space-y-1">
+                        @foreach(explode("\n", $court->description) as $facility)
+                            @if(trim($facility) !== '')
+                                <p class="text-sm text-gray-600 dark:text-gray-300">
+                                    {{ $facility }}
+                                </p>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <p class="text-gray-700 dark:text-gray-200 mb-4">
+                Rp {{ number_format($court->price_per_hour) }} / jam
+            </p>
                 @if($court->bookings->count() > 0)
                     <span class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm">
                         Ada Booking

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
@@ -17,6 +16,12 @@ class Booking extends Model
         'customer_name',
         'customer_phone',
         'customer_email',
+        'booking_code',
+        'snap_token',
+        'midtrans_order_id',
+        'payment_type',
+        'transaction_status',
+        'paid_at',
     ];
     public function user()
     {

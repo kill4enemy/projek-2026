@@ -9,6 +9,7 @@ class Court extends Model
     protected $fillable = [
     'name',
     'location',
+    'description',
     'price_per_hour',
     'is_active',
     'image',

@@ -2,6 +2,7 @@
 use App\Models\Booking;
 use App\Models\Court;
 use App\Models\ProjectReport;
+use App\Models\AboutSection;
 use App\Http\Controllers\BookingController;
 
 use Illuminate\Http\Request;
@@ -28,7 +29,8 @@ Route::get('/', function () {
     $totalBookings = Booking::count();
     $totalCourts = Court::count();
     $courts = Court::whereNotNull('image')->get();
-    return view('pages.home', compact('totalBookings', 'totalCourts','courts'));
+    $about = AboutSection::where('is_active', true)->latest()->first();
+    return view('pages.home', compact('totalBookings', 'totalCourts','courts','about'));
 });
 
 
@@ -40,21 +42,6 @@ Route::get('/booking', function () {
 
 Route::post('/booking', [BookingController::class, 'store'])
     ->name('booking.store');
-
-Route::get('/payment/{booking}', function (Booking $booking) {
-    return view('pages.payment', compact('booking'));
-})->name('payment.show');
-
-Route::post('/payment/{booking}', function (Booking $booking) {
-
-    $booking->update([
-        'status' => 'waiting_confirmation',
-    ]);
-
-    return redirect('/booking')
-        ->with('success', 'Pembayaran berhasil dikirim. Menunggu konfirmasi admin.');
-
-})->name('payment.confirm');
 
 Route::get('/courts', function (Request $request) {
     $selectedDate = $request->get('date', now()->toDateString());
@@ -69,6 +56,7 @@ Route::get('/courts', function (Request $request) {
     return view('pages.courts', compact('courts', 'selectedDate'));
 });
 
+    //diagram
 Route::get('/diagram', function () {
     return view('pages.diagram');
 });
@@ -79,3 +67,22 @@ Route::get('/showcase-report', function () {
 
     return view('pages.showcase-report', compact('report'));
 });
+
+    //Midtrans route
+Route::get('/payment/{booking}', function (Booking $booking) {
+    return view('pages.payment', compact('booking'));
+})->name('payment.show');
+ 
+Route::post('/midtrans/callback', [BookingController::class, 'callback'])
+    ->name('midtrans.callback');
+
+    //Invoice
+Route::get('/invoice/{booking}', function (Booking $booking) {
+    return view('pages.invoice', compact('booking'));
+})->name('invoice.show');
+
+Route::get('/payment/finish/{booking}', function (Booking $booking) {
+    return redirect()->route('invoice.show', $booking)
+        ->with('success', 'Pembayaran berhasil. Berikut invoice booking Anda.');
+})->name('payment.finish');
+

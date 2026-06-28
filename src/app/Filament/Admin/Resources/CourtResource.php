@@ -30,6 +30,12 @@ class CourtResource extends Resource
 
                 Forms\Components\TextInput::make('location'),
 
+                Forms\Components\Textarea::make('description')
+                    ->label('Deskripsi / Fasilitas')
+                    ->rows(4)
+                    ->placeholder('Contoh: AC, ruang tunggu, parkir luas, shower, raket gratis.')
+                    ->nullable(),
+
                 Forms\Components\TextInput::make('price_per_hour')
                     ->numeric()
                     ->required(),
@@ -53,6 +59,11 @@ class CourtResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
 
                 Tables\Columns\TextColumn::make('location'),
+
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Fasilitas')
+                    ->limit(40)
+                    ->wrap(),
 
                 Tables\Columns\TextColumn::make('price_per_hour'),
 

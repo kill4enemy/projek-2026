@@ -17,15 +17,15 @@
 
         <div class="absolute inset-0 dark:bg-black/40"></div>
 
-<div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 min-h-[750px] items-center px-8 md:px-28 pt-10">
+<div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 min-h-[620px] items-stretch px-8 md:px-28 pt-10 py-16">
 
     {{-- Left Card --}}
-    <div class="max-w-2xl rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border border-white/30 dark:border-white/20 p-8 md:p-10 shadow-2xl">
+    <div class="w-full h-full rounded-2xl bg-white/80 dark:bg-white/10 backdrop-blur-sm border border-white/30 dark:border-white/20 p-7 md:p-8 shadow-2xl flex flex-col justify-center">
         <p class="text-blue-600 dark:text-blue-300 font-semibold tracking-widest uppercase mb-4">
             Hans Padel
         </p>
 
-        <h1 class="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
             Booking Lapangan Padel Jadi Lebih Mudah
         </h1>
 
@@ -75,7 +75,7 @@
     </div>
 
     {{-- Right Slideshow --}}
-    <div class="relative h-[420px] rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
+    <div class="relative w-full h-full min-h-[460px] rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
         @forelse ($courts as $index => $court)
             <div class="court-slide absolute inset-0 transition-opacity duration-700 {{ $index === 0 ? 'opacity-100' : 'opacity-0' }}">
                 <img
@@ -130,36 +130,131 @@
             </div>
         @endif
     </div>
-
+</section>
 </div>
 
-<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-        <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">
-            Cek Lapangan
-        </h3>
-        <p class="text-gray-600 dark:text-gray-300">
-            Pengguna dapat melihat daftar lapangan padel yang tersedia.
-        </p>
+{{-- Card About --}}
+<section id="about" class="max-w-6xl mx-auto mt-12 px-4 scroll-mt-24">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow overflow-hidden">
+
+        <div class="grid grid-cols-1 md:grid-cols-2">
+
+            {{-- Gambar About --}}
+            <div>
+                @if($about && $about->image)
+                    <img
+                        src="{{ str_starts_with($about->image, 'images/')
+                            ? asset($about->image)
+                            : asset('storage/' . $about->image) }}"
+                        alt="{{ $about->title }}"
+                        class="w-full h-full min-h-[350px] object-cover"
+                    >
+                @endif
+            </div>
+
+            {{-- Isi About --}}
+            <div class="p-8 flex flex-col justify-center">
+
+                <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+                    {{ $about->title }}
+                </h2>
+
+                <p class="text-lg leading-relaxed text-gray-700 dark:text-white">
+                    {{ $about->description }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<section class="max-w-6xl mx-auto mt-10 px-4">
+
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow overflow-hidden">
+
+        <div class="grid grid-cols-1 md:grid-cols-2">
+
+            {{-- MAPS --}}
+            <div class="min-h-[350px] bg-gray-200 dark:bg-gray-700">
+
+                {{-- NANTI ISI IFRAME --}}
+                <div class="w-full h-full flex items-center justify-center text-gray-500">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.9269004526786!2d106.52337707475105!3d-6.27334259371544!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e420768746c45fb%3A0x192fcb02ae7a563f!2sUniversitas%20Esa%20Unggul%20Kampus%20Tangerang!5e0!3m2!1sid!2sid!4v1781577384829!5m2!1sid!2sid"
+                        width="100%"
+                        height="100%"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+
+            </div>
+
+            {{-- INFO LOKASI --}}
+            <div class="p-8 flex flex-col justify-center">
+
+                <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+                    Lokasi Kami
+                </h2>
+
+                <div class="space-y-5 text-gray-700 dark:text-white leading-relaxed">
+
+                    <div>
+                        <span class="font-semibold text-gray-900 dark:text-white">
+                            Alamat:
+                        </span>
+
+                        <p class="text-gray-700 dark:text-gray-100">
+                            Jl. Contoh No. 123, Tangerang, Banten
+                        </p>
+                    </div>
+
+                    <div>
+                        <span class="font-semibold text-gray-900 dark:text-white">
+                            WhatsApp:
+                        </span>
+
+                        <p class="text-gray-700 dark:text-gray-100">
+                            +62 812-8421-6264
+                        </p>
+                    </div>
+
+                    <div>
+                        <span class="font-semibold text-gray-900 dark:text-white">
+                            Email:
+                        </span>
+
+                        <p class="text-gray-700 dark:text-gray-100">
+                            raihanisad2007@gmail.com
+                        </p>
+                    </div>
+
+                    <div>
+                        <span class="font-semibold text-gray-900 dark:text-white">
+                            Jam Operasional:
+                        </span>
+
+                        <p class="text-gray-700 dark:text-gray-100">
+                            Senin - Jumat : 08.00 - 22.00
+                        </p>
+
+                        <p class="text-gray-700 dark:text-gray-100">
+                            Sabtu - Minggu : 07.00 - 23.00
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-        <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">
-            Booking Online
-        </h3>
-        <p class="text-gray-600 dark:text-gray-300">
-            Pemesanan dilakukan melalui website dengan memilih tanggal dan jam.
-        </p>
-    </div>
-
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-        <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">
-            Admin Panel
-        </h3>
-        <p class="text-gray-600 dark:text-gray-300">
-            Admin dapat mengelola lapangan, booking, dan laporan project.
-        </p>
-    </div>
 </section>
 
 

@@ -11,18 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('courts', function (Blueprint $table) {
+        Schema::create('about_sections', function (Blueprint $table) {
             $table->id();
-
-            $table->string('name');
-            $table->string('location')->nullable();
-            $table->text('description')->nullable();
-
-            $table->integer('price_per_hour');
-
-            $table->boolean('is_active')
-                ->default(true);
-
+            $table->string('title');
+            $table->text('description');
+            $table->string('image')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
@@ -32,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('courts');
+        Schema::dropIfExists('about_sections');
     }
 };

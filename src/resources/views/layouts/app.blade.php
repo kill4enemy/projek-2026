@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <title>Padel Court Booking</title>
@@ -24,7 +24,7 @@
     });
 </script>
 
-<body class="bg-gray-100 dark:bg-gray-900 dark:text-white transition-colors">
+<body class="scroll-smooth bg-gray-100 dark:bg-gray-900 dark:text-white transition-colors">
 
     {{-- Navbar --}}
     @include('components.navbar')
@@ -80,10 +80,9 @@
                 </h4>
 
                 <ul class="space-y-2">
-                    <li><a href="/" class="hover:text-blue-400">Home</a></li>
+                    <li><a href="/#about" class="hover:text-blue-400">About</a></li>
                     <li><a href="/courts" class="hover:text-blue-400">Courts</a></li>
                     <li><a href="/booking" class="hover:text-blue-400">Booking</a></li>
-                    <li><a href="/showcase-report" class="hover:text-blue-400">Showcase Report</a></li>
                 </ul>
             </div>
 

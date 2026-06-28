@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             CourtSeeder::class,
             BookingSeeder::class,
             ProjectReportSeeder::class,
+            AboutSectionSeeder::class,
         ]);
     }
 }
